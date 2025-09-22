@@ -9,7 +9,7 @@
   },
   "author": "Standinwol",
   "license": "MIT",
-  "keywords": ["blockchain", "fhevm", "zama", "2048", "nft", "privacy", "encryption", "web3", "gamefi"],
+  "keywords": ["blockchain", "ethereum", "sepolia", "2048", "nft", "web3", "gamefi"],
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -27,8 +27,6 @@
     "eslint": "8.47.0",
     "eslint-config-next": "14.0.4",
     "ethers": "^6.13.4",
-    "fhevm": "^0.6.2",
-    "fhevmjs": "^0.6.2",
     "lodash": "4.17.21",
     "next": "14.2.7",
     "react": "18.2.0",

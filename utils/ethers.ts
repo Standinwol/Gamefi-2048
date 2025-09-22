@@ -1,15 +1,11 @@
 import { BrowserProvider, Contract } from 'ethers';
-import { CONTRACT_ADDRESSES } from '../contracts-abi/config';
+import { CONTRACT_ADDRESSES, NETWORK_CONFIG } from '../contracts-abi/config';
 import { GAME_TOKEN_ABI } from '../contracts-abi/abis/GameToken';
 import { GAME_NFT_ABI } from '../contracts-abi/abis/GameNFT';
 import { MARKETPLACE_ABI } from '../contracts-abi/abis/Marketplace';
 
-// Sepolia 网络 ID
-export const SEPOLIA_CHAIN_ID = 11155111;
-export const TELOS_CHAIN_ID = 41;
-
-// 添加Avalanche Fuji网络 ID
-export const AVALANCHE_FUJI_CHAIN_ID = 43113;
+// Sepolia Network Configuration
+export const SEPOLIA_CHAIN_ID = NETWORK_CONFIG.chainId;
 
 // 检查钱包是否已连接
 export const isWalletConnected = async () => {
@@ -92,45 +88,45 @@ export const getMarketplaceContract = async (providerOrSigner: any) => {
   }
 };
 
-// 检查并切换到Telos网络
+// Check and switch to Sepolia network
 export const checkAndSwitchNetwork = async () => {
   try {
     if (!window.ethereum) return false;
 
     const chainId = await window.ethereum.request({ method: 'eth_chainId' });
-    if (parseInt(chainId) !== TELOS_CHAIN_ID && parseInt(chainId) !== AVALANCHE_FUJI_CHAIN_ID) {
+    const currentChainId = parseInt(chainId, 16);
+    
+    if (currentChainId !== SEPOLIA_CHAIN_ID) {
       try {
+        // Try to switch to Sepolia
         await window.ethereum.request({
           method: 'wallet_switchEthereumChain',
-          params: [{ chainId: `0x${AVALANCHE_FUJI_CHAIN_ID.toString(16)}` }],
+          params: [{ chainId: `0x${SEPOLIA_CHAIN_ID.toString(16)}` }],
         });
         return true;
       } catch (error: any) {
         if (error.code === 4902) {
-          // 如果网络不存在，添加网络
+          // If network doesn't exist, add Sepolia network
           try {
             await window.ethereum.request({
               method: 'wallet_addEthereumChain',
               params: [
                 {
-                  chainId: `0x${AVALANCHE_FUJI_CHAIN_ID.toString(16)}`,
-                  chainName: 'Avalanche Fuji Testnet',
-                  nativeCurrency: {
-                    name: 'AVAX',
-                    symbol: 'AVAX',
-                    decimals: 18,
-                  },
-                  rpcUrls: ['https://api.avax-test.network/ext/bc/C/rpc'],
-                  blockExplorerUrls: ['https://testnet.snowtrace.io'],
+                  chainId: `0x${SEPOLIA_CHAIN_ID.toString(16)}`,
+                  chainName: NETWORK_CONFIG.name,
+                  nativeCurrency: NETWORK_CONFIG.nativeCurrency,
+                  rpcUrls: [NETWORK_CONFIG.rpcUrl],
+                  blockExplorerUrls: [NETWORK_CONFIG.blockExplorer],
                 },
               ],
             });
             return true;
           } catch (addError) {
-            console.error('Error adding network:', addError);
+            console.error('Error adding Sepolia network:', addError);
             return false;
           }
         }
+        console.error('Error switching to Sepolia:', error);
         return false;
       }
     }
@@ -141,7 +137,7 @@ export const checkAndSwitchNetwork = async () => {
   }
 };
 
-// 检查连接状态
+// Check wallet connection status
 export const checkConnection = async () => {
   try {
     const provider = getProvider();
@@ -152,18 +148,17 @@ export const checkConnection = async () => {
   }
 };
 
-// 断开连接
+// Disconnect wallet
 export const disconnect = async () => {
   if (typeof window !== 'undefined' && window.ethereum) {
     try {
-      // 清除本地存储的连接状态
+      // Clear local storage connection state
       localStorage.removeItem('walletConnected');
 
-      // 如果使用的是 MetaMask，直接清除连接状态
+      // For MetaMask, clear connection state at app level
       if (window.ethereum.isMetaMask) {
-        // 不再调用任何会触发连接请求的方法
-        // MetaMask 实际上没有提供真正的 "断开连接" API
-        // 我们只需要在应用层面清除状态即可
+        // MetaMask doesn't provide a true "disconnect" API
+        // We just clear the state at the application level
       }
     } catch (error) {
       console.error('Error disconnecting wallet:', error);
@@ -171,6 +166,5 @@ export const disconnect = async () => {
   }
 };
 
-// 使用示例
-// 确保在应用启动时调用此函数
+// Initialize network check on app startup
 checkAndSwitchNetwork(); 

@@ -1,18 +1,8 @@
 import { useState, useContext } from 'react';
 import styles from "@/styles/splash.module.css";
 import { toast } from 'react-hot-toast';
+import { getProvider, getSigner, getGameNFTContract, getGameTokenContract, checkAndSwitchNetwork } from '../utils/ethers';
 import { GameContext } from "@/context/game-context";
-import { 
-  initializeFHEVM, 
-  checkFHEVMNetwork, 
-  switchToFHEVMNetwork,
-  encryptGameScore,
-  encryptTimestamp,
-  getFHEVMContractInstance
-} from '../utils/fhevm';
-// Note: You'll need to create ABI files for the FHEVM contracts
-// import { CONFIDENTIAL_GAME_NFT_ABI } from '../contracts-abi/abis/ConfidentialGameNFT';
-// import { CONFIDENTIAL_GAME_TOKEN_ABI } from '../contracts-abi/abis/ConfidentialGameToken';
 
 interface SplashProps {
   heading: string;
@@ -33,95 +23,69 @@ export default function Splash({ heading, type, maxScore, gameEndTime, onReplay 
     }
 
     try {
-      // Initialize FHEVM
-      await initializeFHEVM();
+      const provider = getProvider();
+      const accounts = await provider.send('eth_accounts', []);
       
-      // Check if connected to correct network
-      const isCorrectNetwork = await checkFHEVMNetwork();
-      if (!isCorrectNetwork) {
-        const switched = await switchToFHEVMNetwork();
-        if (!switched) {
-          toast.error('Please switch to the FHEVM network');
-          return;
-        }
-      }
-
-      // Check if wallet is connected
-      if (typeof window !== 'undefined' && window.ethereum) {
-        const accounts = await window.ethereum.request({ method: 'eth_accounts' });
-        if (accounts.length === 0) {
-          toast.error('Please connect your wallet first');
-          return;
-        }
+      if (accounts.length === 0) {
+        toast.error('Please connect your wallet first');
+        return;
       }
 
       setIsLoading(true);
       
-      // For development, we'll use mock contract addresses
-      // In production, these should be the actual deployed FHEVM contract addresses
-      const CONFIDENTIAL_NFT_ADDRESS = '0x0000000000000000000000000000000000000000';
-      const CONFIDENTIAL_TOKEN_ADDRESS = '0x0000000000000000000000000000000000000000';
+      const networkSwitched = await checkAndSwitchNetwork();
+      if (!networkSwitched) {
+        toast.error('Please switch to Sepolia network');
+        return;
+      }
+
+      const signer = await getSigner();
+      const nftContract = await getGameNFTContract(signer);
+      const tokenContract = await getGameTokenContract(signer);
+
+      if (!nftContract || !tokenContract) {
+        toast.error('Contract initialization failed');
+        return;
+      }
       
-      // Encrypt game data
-      const encryptedScore = await encryptGameScore(maxScore || 0);
-      const encryptedTimestamp = await encryptTimestamp(Date.now());
-      
-      console.log('Encrypted game data prepared for FHEVM');
-      console.log('Score (encrypted):', encryptedScore);
-      console.log('Timestamp (encrypted):', encryptedTimestamp);
-      
-      // For development purposes, we'll show success without actual contract interaction
-      // In production, uncomment the contract interaction below:
-      
-      /*
-      // Get contract instances
-      const nftContract = await getFHEVMContractInstance(
-        CONFIDENTIAL_NFT_ADDRESS,
-        CONFIDENTIAL_GAME_NFT_ABI
-      );
-      const tokenContract = await getFHEVMContractInstance(
-        CONFIDENTIAL_TOKEN_ADDRESS,
-        CONFIDENTIAL_GAME_TOKEN_ABI
-      );
-      
-      // Get mint price
+      // Get NFT mint price
       const mintPrice = await nftContract.mintPrice();
       
-      // Approve tokens for NFT minting
-      const mintPriceBytes = new Uint8Array(32); // Encrypted mint price
+      // Approve GameToken for NFT minting
       const approveTx = await tokenContract.approve(
-        CONFIDENTIAL_NFT_ADDRESS,
-        mintPriceBytes
+        nftContract.target,  // NFT contract address
+        mintPrice  // Approval amount
       );
       
-      const approveToast = toast.loading('Approving confidential tokens...');
+      const approveToast = toast.loading('Approving GameToken...');
       await approveTx.wait();
+      console.log('Approve successful!');
       toast.dismiss(approveToast);
-      toast.success('Confidential approval successful!');
+      toast.success('Approval successful!');
+
+      const score = BigInt(maxScore || 0);
+      const timestamp = Math.floor(Date.now() / 1000).toString();
+      console.log('Minting with score:', score, 'timestamp:', timestamp);
       
-      // Mint NFT with encrypted data
       const tx = await nftContract.mint(
-        encryptedScore,
-        encryptedTimestamp
+        score,  // Game score
+        timestamp,    // Timestamp
       );
-      
-      const mintingToast = toast.loading('Minting confidential NFT...');
+
+      const mintingToast = toast.loading('Minting NFT...');
       const receipt = await tx.wait();
-      console.log('Confidential NFT minted:', receipt);
+      console.log('Transaction receipt:', receipt);
       toast.dismiss(mintingToast);
-      */
+      toast.success('NFT Minted Successfully! 🎉');
       
-      // Simulate successful minting for development
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      toast.success('Confidential NFT Minted Successfully! 🎉');
-      console.log('FHEVM NFT minting completed successfully');
-      
+      console.log('NFT minted successfully');
+
     } catch (error: any) {
-      console.error('Error minting confidential NFT:', error);
+      console.error('Error minting NFT:', error);
       if (error.code === 'ACTION_REJECTED') {
         toast.error('User cancelled transaction');
       } else {
-        toast.error('Confidential mint failed: ' + (error.message || 'Unknown error'));
+        toast.error('Mint failed: ' + (error.message || 'Unknown error'));
       }
     } finally {
       setIsLoading(false);
