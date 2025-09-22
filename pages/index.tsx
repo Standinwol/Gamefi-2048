@@ -16,8 +16,8 @@ export default function Home() {
   const [isWalletModalOpen, setIsWalletModalOpen] = useState(false);
 
   useEffect(() => {
-    // Only listen for account changes, no automatic connection check
-    if (typeof window !== 'undefined' && window.ethereum) {
+    // Only listen for account changes from MetaMask, no automatic connection check
+    if (typeof window !== 'undefined' && window.ethereum && window.ethereum.isMetaMask) {
       const handleAccountsChanged = (accounts: string[]) => {
         setWalletAddress(accounts.length > 0 ? accounts[0] : '');
       };
@@ -26,7 +26,7 @@ export default function Home() {
       
       // Cleanup function
       return () => {
-        if (window.ethereum) {
+        if (window.ethereum && window.ethereum.isMetaMask) {
           window.ethereum.removeListener('accountsChanged', handleAccountsChanged);
         }
       };

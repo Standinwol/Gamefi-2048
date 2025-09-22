@@ -46,13 +46,32 @@ export default function WalletModal({ isOpen, onClose, onWalletConnect }: Wallet
   if (!isOpen) return null;
 
   const connectMetaMask = async () => {
+    // Check if MetaMask is specifically installed
     if (!window.ethereum) {
       toast.error('MetaMask is not installed. Please install MetaMask extension.');
       return;
     }
 
+    // Check if MetaMask is the active provider
+    if (!window.ethereum.isMetaMask) {
+      toast.error('MetaMask is not detected. Please make sure MetaMask is enabled and Phantom/other wallets are disabled.');
+      return;
+    }
+
+    // For multiple wallets, try to get MetaMask specifically
+    let provider = window.ethereum;
+    const ethereumWithProviders = window.ethereum as any;
+    if (ethereumWithProviders.providers?.length) {
+      // Multiple wallets detected, find MetaMask
+      provider = ethereumWithProviders.providers.find((p: any) => p.isMetaMask);
+      if (!provider) {
+        toast.error('MetaMask not found. Please enable MetaMask and disable other wallets.');
+        return;
+      }
+    }
+
     try {
-      const accounts = await window.ethereum.request({
+      const accounts = await provider.request({
         method: 'eth_requestAccounts'
       });
       
