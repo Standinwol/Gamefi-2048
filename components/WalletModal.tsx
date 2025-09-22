@@ -1,0 +1,152 @@
+import React from 'react';
+import styles from '@/styles/wallet-modal.module.css';
+import toast from 'react-hot-toast';
+
+interface WalletModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onWalletConnect: (address: string) => void;
+}
+
+interface WalletOption {
+  name: string;
+  icon: string;
+  id: string;
+  description: string;
+}
+
+const walletOptions: WalletOption[] = [
+  {
+    name: 'MetaMask',
+    icon: '🦊',
+    id: 'metamask',
+    description: 'Connect with MetaMask browser extension'
+  },
+  {
+    name: 'WalletConnect',
+    icon: '🔗',
+    id: 'walletconnect',
+    description: 'Connect with WalletConnect protocol'
+  },
+  {
+    name: 'Coinbase Wallet',
+    icon: '🏦',
+    id: 'coinbase',
+    description: 'Connect with Coinbase Wallet'
+  },
+  {
+    name: 'Trust Wallet',
+    icon: '🛡️',
+    id: 'trust',
+    description: 'Connect with Trust Wallet'
+  }
+];
+
+export default function WalletModal({ isOpen, onClose, onWalletConnect }: WalletModalProps) {
+  if (!isOpen) return null;
+
+  const connectMetaMask = async () => {
+    if (!window.ethereum) {
+      toast.error('MetaMask is not installed. Please install MetaMask extension.');
+      return;
+    }
+
+    try {
+      const accounts = await window.ethereum.request({
+        method: 'eth_requestAccounts'
+      });
+      
+      if (accounts.length > 0) {
+        onWalletConnect(accounts[0]);
+        onClose();
+        toast.success('MetaMask connected successfully!');
+      }
+    } catch (error: any) {
+      if (error.code === 4001) {
+        toast.error('Please connect your wallet to continue');
+      } else {
+        toast.error('Failed to connect MetaMask');
+      }
+      console.error('Error connecting MetaMask:', error);
+    }
+  };
+
+  const connectWalletConnect = async () => {
+    toast('WalletConnect integration coming soon!', { icon: 'ℹ️' });
+    // TODO: Implement WalletConnect integration
+  };
+
+  const connectCoinbase = async () => {
+    toast('Coinbase Wallet integration coming soon!', { icon: 'ℹ️' });
+    // TODO: Implement Coinbase Wallet integration
+  };
+
+  const connectTrust = async () => {
+    toast('Trust Wallet integration coming soon!', { icon: 'ℹ️' });
+    // TODO: Implement Trust Wallet integration
+  };
+
+  const handleWalletClick = (walletId: string) => {
+    switch (walletId) {
+      case 'metamask':
+        connectMetaMask();
+        break;
+      case 'walletconnect':
+        connectWalletConnect();
+        break;
+      case 'coinbase':
+        connectCoinbase();
+        break;
+      case 'trust':
+        connectTrust();
+        break;
+      default:
+        toast.error('Wallet not supported yet');
+    }
+  };
+
+  return (
+    <div className={styles.overlay} onClick={onClose}>
+      <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+        <div className={styles.header}>
+          <h2 className={styles.title}>Connect Wallet</h2>
+          <button className={styles.closeButton} onClick={onClose}>
+            ×
+          </button>
+        </div>
+        
+        <div className={styles.content}>
+          <p className={styles.description}>
+            Choose your preferred wallet to connect to the 2048 game
+          </p>
+          
+          <div className={styles.walletList}>
+            {walletOptions.map((wallet) => (
+              <button
+                key={wallet.id}
+                className={styles.walletOption}
+                onClick={() => handleWalletClick(wallet.id)}
+                disabled={wallet.id !== 'metamask'} // Only MetaMask is fully implemented
+              >
+                <div className={styles.walletIcon}>{wallet.icon}</div>
+                <div className={styles.walletInfo}>
+                  <div className={styles.walletName}>{wallet.name}</div>
+                  <div className={styles.walletDescription}>{wallet.description}</div>
+                </div>
+                {wallet.id !== 'metamask' && (
+                  <div className={styles.comingSoon}>Coming Soon</div>
+                )}
+              </button>
+            ))}
+          </div>
+          
+          <div className={styles.footer}>
+            <p className={styles.footerText}>
+              New to wallets? <a href="https://metamask.io/download/" target="_blank" rel="noopener noreferrer">Download MetaMask</a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import styles from '@/styles/index.module.css';
 import Board from '@/components/board';
 import Score from '@/components/score';
+import WalletModal from '@/components/WalletModal';
 import { GameContext } from '@/context/game-context';
 import { useContext } from 'react';
 import toast from 'react-hot-toast';
@@ -12,7 +13,7 @@ import toast from 'react-hot-toast';
 export default function Home() {
   const { startGame } = useContext(GameContext);
   const [walletAddress, setWalletAddress] = useState<string>('');
-  const [isConnecting, setIsConnecting] = useState(false);
+  const [isWalletModalOpen, setIsWalletModalOpen] = useState(false);
 
   useEffect(() => {
     // Only listen for account changes, no automatic connection check
@@ -32,32 +33,12 @@ export default function Home() {
     }
   }, []);
 
-  const connectWallet = async () => {
-    if (!window.ethereum) {
-      toast.error('Please install MetaMask to connect your wallet');
-      return;
-    }
+  const openWalletModal = () => {
+    setIsWalletModalOpen(true);
+  };
 
-    setIsConnecting(true);
-    try {
-      const accounts = await window.ethereum.request({
-        method: 'eth_requestAccounts'
-      });
-      
-      if (accounts.length > 0) {
-        setWalletAddress(accounts[0]);
-        toast.success('Wallet connected successfully!');
-      }
-    } catch (error: any) {
-      if (error.code === 4001) {
-        toast.error('Please connect your wallet to continue');
-      } else {
-        toast.error('Failed to connect wallet');
-      }
-      console.error('Error connecting wallet:', error);
-    } finally {
-      setIsConnecting(false);
-    }
+  const handleWalletConnect = (address: string) => {
+    setWalletAddress(address);
   };
 
   const disconnectWallet = () => {
@@ -107,10 +88,9 @@ export default function Home() {
             ) : (
               <button 
                 className={styles.connectWalletBtn}
-                onClick={connectWallet}
-                disabled={isConnecting}
+                onClick={openWalletModal}
               >
-                {isConnecting ? 'Connecting...' : 'Connect Wallet'}
+                Connect Wallet
               </button>
             )}
           </div>
@@ -153,6 +133,13 @@ export default function Home() {
           <p>Join the numbers and get to the 2048 tile!</p>
         </div>
       </div>
+
+      {/* Wallet Selection Modal */}
+      <WalletModal
+        isOpen={isWalletModalOpen}
+        onClose={() => setIsWalletModalOpen(false)}
+        onWalletConnect={handleWalletConnect}
+      />
     </div>
   );
 }
