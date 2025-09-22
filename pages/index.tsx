@@ -5,10 +5,24 @@ import Board from '@/components/board';
 import Score from '@/components/score';
 import { GameContext } from '@/context/game-context';
 import { useContext } from 'react';
+import toast from 'react-hot-toast';
+
+// Declare global types for window.ethereum
+declare global {
+  interface Window {
+    ethereum?: {
+      request: (args: { method: string; params?: any[] }) => Promise<any>;
+      on: (event: string, callback: (...args: any[]) => void) => void;
+      removeListener: (event: string, callback: (...args: any[]) => void) => void;
+      isMetaMask?: boolean;
+    };
+  }
+}
 
 export default function Home() {
   const { startGame } = useContext(GameContext);
   const [walletAddress, setWalletAddress] = useState<string>('');
+  const [isConnecting, setIsConnecting] = useState(false);
 
   useEffect(() => {
     // Check if wallet is connected
@@ -28,15 +42,57 @@ export default function Home() {
 
     // Listen for account changes
     if (typeof window !== 'undefined' && window.ethereum) {
-      window.ethereum.on('accountsChanged', (accounts: string[]) => {
+      const handleAccountsChanged = (accounts: string[]) => {
         setWalletAddress(accounts.length > 0 ? accounts[0] : '');
-      });
+      };
+      
+      window.ethereum.on('accountsChanged', handleAccountsChanged);
+      
+      // Cleanup function
+      return () => {
+        if (window.ethereum) {
+          window.ethereum.removeListener('accountsChanged', handleAccountsChanged);
+        }
+      };
     }
   }, []);
 
+  const connectWallet = async () => {
+    if (!window.ethereum) {
+      toast.error('Please install MetaMask to connect your wallet');
+      return;
+    }
+
+    setIsConnecting(true);
+    try {
+      const accounts = await window.ethereum.request({
+        method: 'eth_requestAccounts'
+      });
+      
+      if (accounts.length > 0) {
+        setWalletAddress(accounts[0]);
+        toast.success('Wallet connected successfully!');
+      }
+    } catch (error: any) {
+      if (error.code === 4001) {
+        toast.error('Please connect your wallet to continue');
+      } else {
+        toast.error('Failed to connect wallet');
+      }
+      console.error('Error connecting wallet:', error);
+    } finally {
+      setIsConnecting(false);
+    }
+  };
+
+  const disconnectWallet = () => {
+    setWalletAddress('');
+    toast.success('Wallet disconnected');
+  };
+
   const formatAddress = (address: string) => {
     if (!address) return '';
-    return `${address.slice(0, 6)}...${address.slice(-2)}`;
+    return `${address.slice(0, 6)}...${address.slice(-4)}`;
   };
 
   return (
@@ -47,6 +103,44 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="favicon.ico" />
       </Head>
+
+      {/* Top Navigation with Connect Wallet Button */}
+      <div className={styles.topNav}>
+        <div className={styles.navContent}>
+          <div className={styles.navLeft}></div>
+          <div className={styles.navRight}>
+            {walletAddress ? (
+              <div className={styles.walletConnected}>
+                <span className={styles.connectedAddress}>
+                  {formatAddress(walletAddress)}
+                </span>
+                <button 
+                  className={styles.copyAddressBtn}
+                  onClick={() => navigator.clipboard.writeText(walletAddress)}
+                  title="Copy address"
+                >
+                  📋
+                </button>
+                <button 
+                  className={styles.disconnectBtn}
+                  onClick={disconnectWallet}
+                  title="Disconnect wallet"
+                >
+                  ×
+                </button>
+              </div>
+            ) : (
+              <button 
+                className={styles.connectWalletBtn}
+                onClick={connectWallet}
+                disabled={isConnecting}
+              >
+                {isConnecting ? 'Connecting...' : 'Connect Wallet'}
+              </button>
+            )}
+          </div>
+        </div>
+      </div>
 
       <div className={styles.content}>
         {/* Main Title */}
@@ -68,13 +162,6 @@ export default function Home() {
               <div className={styles.playerInfo}>
                 <span className={styles.playerLabel}>Player:</span>
                 <span className={styles.playerAddress}>{formatAddress(walletAddress)}</span>
-                <button 
-                  className={styles.copyButton}
-                  onClick={() => navigator.clipboard.writeText(walletAddress)}
-                  title="Copy address"
-                >
-                  📋
-                </button>
               </div>
             )}
           </div>

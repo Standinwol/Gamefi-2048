@@ -4,14 +4,122 @@
   background: var(--primary-background);
   display: flex;
   flex-direction: column;
+}
+
+/* Top Navigation */
+.topNav {
+  width: 100%;
+  padding: 20px 0;
+  position: relative;
+  z-index: 100;
+}
+
+.navContent {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  justify-content: space-between;
   align-items: center;
-  padding: 20px;
+}
+
+.navLeft {
+  flex: 1;
+}
+
+.navRight {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+/* Connect Wallet Button */
+.connectWalletBtn {
+  background: var(--new-game-button);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+  min-width: 140px;
+}
+
+.connectWalletBtn:hover {
+  background: var(--button-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4);
+}
+
+.connectWalletBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Connected Wallet Display */
+.walletConnected {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 8px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.connectedAddress {
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
+  color: white;
+  font-weight: 500;
+}
+
+.copyAddressBtn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 4px;
+  border-radius: 4px;
+  transition: background 0.2s ease;
+  color: white;
+}
+
+.copyAddressBtn:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.disconnectBtn {
+  background: rgba(255, 0, 0, 0.1);
+  border: 1px solid rgba(255, 0, 0, 0.3);
+  color: #ff4444;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.disconnectBtn:hover {
+  background: rgba(255, 0, 0, 0.2);
+  border-color: rgba(255, 0, 0, 0.5);
 }
 
 .content {
+  flex: 1;
   width: 100%;
   max-width: 500px;
   margin: 0 auto;
+  padding: 0 20px;
 }
 
 /* Title Section */
@@ -136,12 +244,31 @@
 
 /* Responsive Design */
 @media (max-width: 768px) {
-  .container {
-    padding: 15px;
+  .topNav {
+    padding: 15px 0;
+  }
+  
+  .navContent {
+    padding: 0 15px;
+  }
+  
+  .connectWalletBtn {
+    padding: 10px 20px;
+    font-size: 14px;
+    min-width: 120px;
+  }
+  
+  .walletConnected {
+    padding: 6px 10px;
+  }
+  
+  .connectedAddress {
+    font-size: 12px;
   }
   
   .content {
     max-width: 100%;
+    padding: 0 15px;
   }
   
   .mainTitle {
@@ -166,8 +293,22 @@
 }
 
 @media (max-width: 480px) {
-  .container {
-    padding: 10px;
+  .topNav {
+    padding: 12px 0;
+  }
+  
+  .navContent {
+    padding: 0 10px;
+  }
+  
+  .connectWalletBtn {
+    padding: 8px 16px;
+    font-size: 13px;
+    min-width: 100px;
+  }
+  
+  .content {
+    padding: 0 10px;
   }
   
   .mainTitle {
