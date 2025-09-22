@@ -9,7 +9,15 @@
   },
   "author": "Standinwol",
   "license": "MIT",
-  "keywords": ["blockchain", "ethereum", "sepolia", "2048", "nft", "web3", "gamefi"],
+  "keywords": [
+    "blockchain",
+    "ethereum",
+    "sepolia",
+    "2048",
+    "nft",
+    "web3",
+    "gamefi"
+  ],
   "scripts": {
     "dev": "next dev",
     "build": "next build",

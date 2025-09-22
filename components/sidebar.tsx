@@ -1,7 +1,6 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from '@/styles/sidebar.module.css';
 import { getSigner, getGameTokenContract } from '@/utils/ethers';
-import AdminMintModal from './AdminMintModal';
 import toast from 'react-hot-toast';
 
 // 为 window.ethereum 添加类型声明
@@ -17,17 +16,16 @@ declare global {
 }
 
 interface SidebarProps {
-  currentTab: 'game' | 'marketplace' | 'profile';
-  onTabChange: (tab: 'game' | 'marketplace' | 'profile') => void;
+  // Simplified to only show game
 }
 
-export default function Sidebar({ currentTab, onTabChange }: SidebarProps) {
+export default function Sidebar() {
   const [address, setAddress] = useState<string>('');
   const [canClaim, setCanClaim] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
-  const [isMintModalOpen, setIsMintModalOpen] = useState(false);
+
   const [balance, setBalance] = useState('0');
-  const [isOwner, setIsOwner] = useState(false);
+
 
   useEffect(() => {
     if (window.ethereum) {
@@ -43,7 +41,6 @@ export default function Sidebar({ currentTab, onTabChange }: SidebarProps) {
 
   useEffect(() => {
     if (address) {
-      void checkIsOwner();
       void updateBalance();
       void checkCanClaim();
     }
@@ -71,7 +68,7 @@ export default function Sidebar({ currentTab, onTabChange }: SidebarProps) {
       setAddress('');
       setBalance('0');
       setCanClaim(false);
-      setIsOwner(false);
+
     }
   };
 
@@ -94,18 +91,7 @@ export default function Sidebar({ currentTab, onTabChange }: SidebarProps) {
     }
   };
 
-  const checkIsOwner = async () => {
-    try {
-      const signer = await getSigner();
-      const contract = await getGameTokenContract(signer);
-      if (!contract) return;
 
-      const ownerAddress = await contract.owner();
-      setIsOwner(ownerAddress.toLowerCase() === address.toLowerCase());
-    } catch (error) {
-      console.error('检查所有者状态失败:', error);
-    }
-  };
 
   const checkCanClaim = async () => {
     try {
@@ -168,23 +154,8 @@ export default function Sidebar({ currentTab, onTabChange }: SidebarProps) {
   return (
     <div className={styles.sidebar}>
       <div className={styles.tabsContainer}>
-        <div
-          className={`${styles.tab} ${currentTab === 'game' ? styles.active : ''}`}
-          onClick={() => onTabChange('game')}
-        >
-          Game
-        </div>
-        <div
-          className={`${styles.tab} ${currentTab === 'marketplace' ? styles.active : ''}`}
-          onClick={() => onTabChange('marketplace')}
-        >
-          Marketplace
-        </div>
-        <div
-          className={`${styles.tab} ${currentTab === 'profile' ? styles.active : ''}`}
-          onClick={() => onTabChange('profile')}
-        >
-          My
+        <div className={`${styles.tab} ${styles.active}`}>
+          2048 Game
         </div>
       </div>
 
@@ -200,14 +171,7 @@ export default function Sidebar({ currentTab, onTabChange }: SidebarProps) {
                 {isLoading ? 'Claiming...' : 'GetAirdrop'}
               </button>
             )}
-            {/* {isOwner && (
-              <button
-                onClick={() => setIsMintModalOpen(true)}
-                className={styles.airdropButton}
-              >
-                Mint
-              </button>
-            )} */}
+
             <button className={styles.connectButton}>
               <span>{`${address.slice(0, 6)}...${address.slice(-4)}`}</span>
             </button>
@@ -219,13 +183,7 @@ export default function Sidebar({ currentTab, onTabChange }: SidebarProps) {
         )}
       </div>
 
-      <AdminMintModal
-        isOpen={isMintModalOpen}
-        onClose={() => setIsMintModalOpen(false)}
-        onSuccess={() => {
-          void updateBalance();
-        }}
-      />
+
     </div>
   );
 } 
