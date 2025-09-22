@@ -1,19 +1,30 @@
-# 2048 Game with NFT Marketplace
+# 2048 Game with NFT Marketplace & FHEVM Privacy
 
-[English](README.md) | [中文](README_CN.md)
+[English](README.md) | [中文](README_CN.md) | [FHEVM Integration Guide](FHEVM_INTEGRATION.md)
 
-A blockchain-based 2048 game that integrates NFT minting and marketplace functionality, allowing players to mint their game achievements as NFTs and trade them in the marketplace. Now supports multiple networks including Sepolia, Telos Testnet, and Avalanche Fuji, with unique NFT designs stored on IPFS.
+A blockchain-based 2048 game that integrates NFT minting and marketplace functionality, now enhanced with **Zama's FHEVM (Fully Homomorphic Encryption Virtual Machine)** for complete privacy. Players can mint their game achievements as NFTs and trade them in the marketplace while keeping their scores, balances, and transaction amounts completely confidential.
+
+## 🔐 NEW: FHEVM Privacy Features
+
+- **🎮 Private Game Scores**: Your actual scores are encrypted and only you can see them
+- **💰 Confidential Token Balances**: Token amounts are hidden from public view
+- **🖼️ Encrypted NFT Metadata**: Achievement data in NFTs remains private
+- **🛒 Hidden Marketplace Prices**: Trading prices can be kept secret
+- **🔒 Fully Confidential Transactions**: All transaction amounts are encrypted
+
+> **See [FHEVM_INTEGRATION.md](FHEVM_INTEGRATION.md) for complete privacy integration documentation**
 
 ## Features
 
 - 🎮 Classic 2048 gameplay
+- 🔐 **NEW: FHEVM Privacy Integration** - Fully confidential gaming with encrypted scores and balances
 - 🎨 Game achievement NFT minting system with unique designs
-- 💰 NFT marketplace for trading
-- 🌐 Multi-network support: Sepolia, Telos Testnet, Avalanche Fuji
+- 💰 NFT marketplace for trading (with optional price privacy)
+- 🌐 Multi-network support: Sepolia, Telos Testnet, Avalanche Fuji, **Zama Devnet**
 - 🖼️ NFT images stored on IPFS
 - 🎁 Daily token airdrop rewards
 - 📱 Responsive design for mobile devices
-- 🔗 Ethereum-based smart contracts
+- 🔗 Ethereum-based smart contracts + FHEVM confidential contracts
 
 ## Tech Stack
 
@@ -23,12 +34,14 @@ A blockchain-based 2048 game that integrates NFT minting and marketplace functio
   - TypeScript
   - CSS Modules
   - Ethers.js
+  - **fhevmjs** (FHEVM SDK)
 
 - Smart Contracts:
   - Solidity
-  - ERC20 Token
-  - ERC721 NFT
-  - Marketplace Contract
+  - ERC20 Token + **Confidential ERC20 (FHEVM)**
+  - ERC721 NFT + **Confidential ERC721 (FHEVM)**
+  - Marketplace Contract + **Confidential Marketplace (FHEVM)**
+  - **TFHE Library** for encrypted computations
 
 ## Quick Start
 

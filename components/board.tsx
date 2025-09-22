@@ -6,11 +6,7 @@ import { GameContext } from "@/context/game-context";
 import MobileSwiper, { SwipeInput } from "./mobile-swiper";
 import Splash from "./splash";
 
-interface BoardProps {
-  onTabChange: (tab: 'game' | 'marketplace' | 'profile') => void;
-}
-
-export default function Board({ onTabChange }: BoardProps) {
+export default function Board() {
   const { getTiles, moveTiles, startGame, status, endGame, maxScore, gameEndTime } = useContext(GameContext);
   const initialized = useRef(false);
 
@@ -95,7 +91,6 @@ export default function Board({ onTabChange }: BoardProps) {
         type="ended"
         maxScore={maxScore}
         gameEndTime={gameEndTime}
-        onTabChange={onTabChange}
         onReplay={startGame}
       />
     );
