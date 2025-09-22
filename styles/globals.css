@@ -1,16 +1,37 @@
 :root {
   --pixel-size: 8px;
 
-  /* Backgrounds */
-  --primary-background: #faf8ef;
-  --secondary-background: #b59d87;
-  --cell-background: #cebda6;
-  --tile-background: #eee4da;
-  --button-background: #8f7a66;
+  /* Modern Purple/Blue Gradient Background */
+  --primary-background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --card-background: #8b5cf6;
+  --card-background-dark: #7c3aed;
+  --game-background: #f3f4f6;
+  
+  /* Tile Colors */
+  --cell-background: rgba(255, 255, 255, 0.3);
+  --tile-background: #f9fafb;
+  --tile-2: #f3e8ff;
+  --tile-4: #e9d5ff;
+  --tile-8: #d8b4fe;
+  --tile-16: #c084fc;
+  --tile-32: #a855f7;
+  --tile-64: #9333ea;
+  --tile-128: #7c3aed;
+  --tile-256: #6d28d9;
+  --tile-512: #5b21b6;
+  --tile-1024: #4c1d95;
+  --tile-2048: #c2410c;
+  
+  /* Text Colors */
+  --primary-text-color: #1f2937;
+  --secondary-text-color: #ffffff;
+  --accent-text-color: #fbbf24;
+  --instruction-text: #6b7280;
 
-  /* Colors */
-  --primary-text-color: #776e65;
-  --secondary-text-color: #f9f6f2;
+  /* Button Colors */
+  --button-background: #8b5cf6;
+  --button-hover: #7c3aed;
+  --new-game-button: #8b5cf6;
 }
 
 body {
@@ -31,6 +52,7 @@ body {
   color: var(--primary-text-color);
   font-size: calc(var(--pixel-size) * 2.25);
   line-height: calc(var(--pixel-size) * 3.5);
+  min-height: 100vh;
 }
 
 a {

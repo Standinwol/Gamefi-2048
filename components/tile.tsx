@@ -1,38 +1,34 @@
 import { useEffect, useState } from "react";
-import { useMediaQuery } from "react-responsive";
-import {
-  containerWidthMobile,
-  containerWidthDesktop,
-  mergeAnimationDuration,
-  tileCountPerDimension,
-} from "@/constants";
 import { Tile as TileProps } from "@/models/tile";
 import styles from "@/styles/tile.module.css";
 import usePreviousProps from "@/hooks/use-previous-props";
 
 export default function Tile({ position, value }: TileProps) {
-  const isWideScreen = useMediaQuery({ minWidth: 512 });
-  const containerWidth = isWideScreen
-    ? containerWidthDesktop
-    : containerWidthMobile;
-
   const [scale, setScale] = useState(1);
   const previousValue = usePreviousProps<number>(value);
   const hasChanged = previousValue !== value;
 
-  const positionToPixels = (position: number) =>
-    (position / tileCountPerDimension) * containerWidth;
+  // Calculate position based on CSS Grid
+  const calculatePosition = (x: number, y: number) => {
+    const cellSize = 'calc(100% / 4 - 10px)';
+    const gap = 10;
+    return {
+      left: `calc(${x} * (100% / 4))`,
+      top: `calc(${y} * (100% / 4))`,
+    };
+  };
 
   useEffect(() => {
     if (hasChanged) {
       setScale(1.1);
-      setTimeout(() => setScale(1), mergeAnimationDuration);
+      setTimeout(() => setScale(1), 100);
     }
   }, [hasChanged]);
 
+  const positionStyle = calculatePosition(position[0], position[1]);
+  
   const style = {
-    left: positionToPixels(position[0]),
-    top: positionToPixels(position[1]),
+    ...positionStyle,
     transform: `scale(${scale})`,
     zIndex: value,
   };

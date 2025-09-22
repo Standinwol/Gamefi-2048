@@ -1,28 +1,46 @@
 .score {
-  background: var(--secondary-background);
-  border: calc(var(--pixel-size) * 0.5) solid var(--secondary-background);
-  border-radius: calc(var(--pixel-size) * 0.75);
-  color: var(--tile-background);
-  font-size: calc(var(--pixel-size) * 1.5);
-  line-height: calc(var(--pixel-size) * 3);
-  font-weight: bold;
+  background: var(--card-background);
+  border-radius: 15px;
+  color: var(--secondary-text-color);
+  padding: 20px 30px;
   text-align: center;
+  box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+  min-width: 120px;
+}
+
+.score {
+  font-size: 16px;
+  font-weight: 600;
   text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
 }
 
 .score > div {
-  font-size: calc(var(--pixel-size) * 2.5);
-  color: var(--secondary-text-color);
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--accent-text-color);
+  margin: 0;
 }
 
-@media (min-width: 512px) {
+@media (max-width: 768px) {
   .score {
-    border: calc(var(--pixel-size) * 1) solid var(--secondary-background);
-    font-size: calc(var(--pixel-size) * 2);
-    line-height: calc(var(--pixel-size) * 3.5);
+    padding: 15px 25px;
+    min-width: 100px;
   }
-
+  
   .score > div {
-    font-size: calc(var(--pixel-size) * 3.5);
+    font-size: 28px;
+  }
+}
+
+@media (max-width: 480px) {
+  .score {
+    padding: 12px 20px;
+    min-width: 80px;
+  }
+  
+  .score > div {
+    font-size: 24px;
   }
 }

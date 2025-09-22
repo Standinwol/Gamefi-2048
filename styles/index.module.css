@@ -1,154 +1,187 @@
-.twenty48 {
-  margin: calc(var(--pixel-size) * 0) auto;
-  padding: calc(var(--pixel-size) * 1);
-  width: 100%;
-  max-width: calc(var(--pixel-size) * 37);
-}
-
-@media (min-width: 512px) {
-  .twenty48 {
-    max-width: calc(var(--pixel-size) * 60);
-  }
-}
-
-.twenty48>header {
-  display: flex;
-  align-items: center;
-  margin: calc(var(--pixel-size) * 1) calc(var(--pixel-size) * 0);
-}
-
-.twenty48>header>* {
-  flex: 1;
-}
-
-.twenty48>footer {
-  margin: calc(var(--pixel-size) * 3) calc(var(--pixel-size) * 0);
-  font-weight: 600;
-  text-align: center;
-}
-
-.twenty48>footer>.socials {
-  display: flex;
-  justify-content: center;
-  margin-bottom: calc(var(--pixel-size) * 2);
-}
-
-.twenty48>footer>.socials>a>img {
-  vertical-align: middle;
-  margin: calc(var(--pixel-size) * 0.5);
-}
-
-@media (min-width: 512px) {
-  .twenty48>footer {
-    display: flex;
-    flex-direction: row-reverse;
-    align-items: center;
-    text-align: left;
-  }
-
-  .twenty48>footer>div {
-    width: 100%;
-  }
-
-  .twenty48>footer>.socials {
-    justify-content: right;
-    margin-bottom: calc(var(--pixel-size) * 0);
-  }
-
-  .twenty48>footer>.socials>a>img:last-child {
-    margin: calc(var(--pixel-size) * 1);
-    margin-right: calc(var(--pixel-size) * 0);
-  }
-}
-
+/* Modern 2048 UI Styles */
 .container {
   min-height: 100vh;
+  background: var(--primary-background);
   display: flex;
   flex-direction: column;
+  align-items: center;
+  padding: 20px;
 }
 
 .content {
-  flex: 1;
-  padding: 2px;
   width: 100%;
-  max-width: 1200px;
+  max-width: 500px;
   margin: 0 auto;
 }
 
-.gameContainer {
-  max-width: 600px;
-  margin: 0 auto;
-  padding: 2px;
+/* Title Section */
+.titleSection {
+  text-align: center;
+  margin-bottom: 30px;
 }
 
-.gameHeader {
+.mainTitle {
+  font-size: 80px;
+  font-weight: 900;
+  margin: 0;
+  background: linear-gradient(45deg, #fbbf24, #f59e0b, #d97706);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  transform: perspective(300px) rotateX(15deg);
+  letter-spacing: 8px;
+}
+
+.subtitle {
+  font-size: 32px;
+  font-weight: 700;
+  margin: 10px 0 0 0;
+  color: var(--card-background);
+  text-transform: uppercase;
+  letter-spacing: 4px;
+}
+
+/* Game Controls */
+.gameControls {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  margin-bottom: 8px;
-  flex-wrap: wrap;
-  gap: 16px;
+  align-items: flex-start;
+  margin-bottom: 30px;
+  gap: 20px;
 }
 
-.gameHeader h1 {
-  margin: 0;
-  font-size: 40px;
+.leftControls {
+  flex: 0 0 auto;
+}
+
+.rightControls {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  align-items: flex-end;
+}
+
+.newGameButton {
+  background: var(--new-game-button);
+  color: white;
+  border: none;
+  border-radius: 15px;
+  padding: 15px 30px;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+}
+
+.newGameButton:hover {
+  background: var(--button-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4);
+}
+
+.playerInfo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
   color: var(--primary-text-color);
 }
 
+.playerLabel {
+  font-weight: 600;
+}
+
+.playerAddress {
+  font-family: 'Courier New', monospace;
+  background: rgba(255, 255, 255, 0.2);
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.copyButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 4px;
+  border-radius: 4px;
+  transition: background 0.2s ease;
+}
+
+.copyButton:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Game Main */
 .gameMain {
   display: flex;
   justify-content: center;
-  width: 100%;
+  margin-bottom: 30px;
 }
 
-.comingSoon {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-  color: var(--secondary-background);
-  padding: 40px;
+/* Instructions */
+.instructions {
   text-align: center;
+  color: var(--instruction-text);
+  font-size: 16px;
+  line-height: 1.5;
 }
 
+.instructions p {
+  margin: 8px 0;
+}
+
+/* Responsive Design */
 @media (max-width: 768px) {
+  .container {
+    padding: 15px;
+  }
+  
   .content {
-    padding: 16px;
+    max-width: 100%;
   }
-
-  .gameContainer {
-    padding: 12px;
+  
+  .mainTitle {
+    font-size: 60px;
+    letter-spacing: 4px;
   }
-
-  .gameHeader {
-    margin-bottom: 20px;
-    justify-content: center;
+  
+  .subtitle {
+    font-size: 24px;
+    letter-spacing: 2px;
   }
-
-  .gameHeader h1 {
-    font-size: 32px;
+  
+  .gameControls {
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+  }
+  
+  .rightControls {
+    align-items: center;
   }
 }
 
 @media (max-width: 480px) {
-  .content {
-    padding: 12px;
+  .container {
+    padding: 10px;
   }
-
-  .gameContainer {
-    padding: 8px;
+  
+  .mainTitle {
+    font-size: 48px;
+    letter-spacing: 2px;
   }
-
-  .gameHeader {
-    margin-bottom: 16px;
+  
+  .subtitle {
+    font-size: 20px;
+    letter-spacing: 1px;
   }
-
-  .gameHeader h1 {
-    font-size: 28px;
-  }
-
-  .comingSoon {
-    padding: 24px;
+  
+  .newGameButton {
+    padding: 12px 24px;
+    font-size: 16px;
   }
 }
