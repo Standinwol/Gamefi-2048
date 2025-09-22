@@ -7,17 +7,7 @@ import { GameContext } from '@/context/game-context';
 import { useContext } from 'react';
 import toast from 'react-hot-toast';
 
-// Declare global types for window.ethereum
-declare global {
-  interface Window {
-    ethereum?: {
-      request: (args: { method: string; params?: any[] }) => Promise<any>;
-      on: (event: string, callback: (...args: any[]) => void) => void;
-      removeListener: (event: string, callback: (...args: any[]) => void) => void;
-      isMetaMask?: boolean;
-    };
-  }
-}
+
 
 export default function Home() {
   const { startGame } = useContext(GameContext);
@@ -25,22 +15,7 @@ export default function Home() {
   const [isConnecting, setIsConnecting] = useState(false);
 
   useEffect(() => {
-    // Check if wallet is connected
-    const checkWallet = async () => {
-      if (typeof window !== 'undefined' && window.ethereum) {
-        try {
-          const accounts = await window.ethereum.request({ method: 'eth_accounts' });
-          if (accounts.length > 0) {
-            setWalletAddress(accounts[0]);
-          }
-        } catch (error) {
-          console.error('Error checking wallet:', error);
-        }
-      }
-    };
-    checkWallet();
-
-    // Listen for account changes
+    // Only listen for account changes, no automatic connection check
     if (typeof window !== 'undefined' && window.ethereum) {
       const handleAccountsChanged = (accounts: string[]) => {
         setWalletAddress(accounts.length > 0 ? accounts[0] : '');
