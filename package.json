@@ -1,7 +1,7 @@
 {
   "name": "fhevm-2048-game",
   "version": "1.0.0",
-  "description": "A blockchain-based 2048 game with FHEVM privacy integration for confidential gaming",
+  "description": "A privacy-first blockchain 2048 game with FHEVM integration for confidential gaming",
   "homepage": "https://fhevm-2048-game.vercel.app",
   "repository": {
     "type": "git",
@@ -12,47 +12,61 @@
   "keywords": [
     "blockchain",
     "ethereum",
-    "sepolia",
+    "sepolia", 
     "2048",
+    "fhevm",
+    "privacy",
+    "zama",
     "nft",
     "web3",
     "gamefi"
   ],
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint",
-    "check-code": "prettier --check .",
-    "format": "prettier --write .",
-    "test": "jest --watch",
-    "test-coverage": "jest --coverage --verbose"
+    "dev": "node scripts/dev.js",
+    "dev:frontend": "cd frontend-fhe-game && npm run dev",
+    "dev:server": "cd server && npm run dev",
+    "build": "node scripts/build.js",
+    "build:frontend": "cd frontend-fhe-game && npm run build",
+    "build:server": "cd server && npm run build",
+    "start": "npm run start:server",
+    "start:frontend": "cd frontend-fhe-game && npm start",
+    "start:server": "cd server && npm start",
+    "setup": "node scripts/setup.js",
+    "deploy:sepolia": "npx hardhat run deploy/01_deploy_game2048_fhe.js --network sepolia",
+    "verify:sepolia": "npx hardhat run deploy/02_verify_contracts.js --network sepolia",
+    "compile": "npx hardhat compile",
+    "test:contracts": "npx hardhat test",
+    "test:frontend": "cd frontend-fhe-game && npm test",
+    "lint": "npm run lint:frontend && npm run lint:server",
+    "lint:frontend": "cd frontend-fhe-game && npm run lint",
+    "lint:server": "cd server && npm run lint || echo 'Server linting not configured'",
+    "format": "npm run format:frontend", 
+    "format:frontend": "cd frontend-fhe-game && npm run format",
+    "clean": "rm -rf node_modules frontend-fhe-game/node_modules server/node_modules frontend-fhe-game/.next artifacts cache",
+    "postinstall": "cd frontend-fhe-game && npm install && cd ../server && npm install"
+  },
+  "workspaces": [
+    "frontend-fhe-game",
+    "server"
+  ],
+  "devDependencies": {
+    "@nomiclabs/hardhat-ethers": "^2.2.3",
+    "@nomiclabs/hardhat-etherscan": "^3.1.7",
+    "@typechain/ethers-v6": "^0.5.1", 
+    "@typechain/hardhat": "^9.1.0",
+    "@types/node": "^20.5.1",
+    "hardhat": "^2.19.0",
+    "hardhat-gas-reporter": "^1.0.9",
+    "solidity-coverage": "^0.8.5",
+    "typechain": "^8.3.2",
+    "dotenv": "^16.3.1"
   },
   "dependencies": {
-    "@types/node": "20.5.1",
-    "@types/react": "18.2.20",
-    "@types/react-dom": "18.2.7",
-    "eslint": "8.47.0",
-    "eslint-config-next": "14.0.4",
     "ethers": "^6.13.4",
-    "lodash": "4.17.21",
-    "next": "14.2.7",
-    "react": "18.2.0",
-    "react-dom": "18.2.0",
-    "react-hot-toast": "^2.4.1",
-    "react-responsive": "9.0.2",
-    "typescript": "5.1.6",
-    "uid": "2.0.2",
-    "web3modal": "^1.9.12"
+    "fhevmjs": "^0.3.0"
   },
-  "devDependencies": {
-    "@testing-library/jest-dom": "6.1.5",
-    "@testing-library/react": "14.1.2",
-    "@types/jest": "29.5.11",
-    "@types/lodash": "4.14.202",
-    "@typescript-eslint/typescript-estree": "6.15.0",
-    "jest": "29.7.0",
-    "jest-environment-jsdom": "29.7.0",
-    "prettier": "3.1.1"
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
   }
 }

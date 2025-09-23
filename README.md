@@ -1,133 +1,246 @@
-# 2048 Game with NFT Marketplace
+# 🎮 FHEVM 2048 Game - Privacy-First Blockchain Gaming
 
-[English](README.md) | [中文](README_CN.md)
+A secure, verifiable 2048 game built with Zama FHEVM (Fully Homomorphic Encryption Virtual Machine) that provides confidential gameplay and private scoring on Ethereum blockchain.
 
-A blockchain-based 2048 game that integrates NFT minting and marketplace functionality, allowing players to mint their game achievements as NFTs and trade them in the marketplace. Built for **Ethereum Sepolia Testnet** with unique NFT designs stored on IPFS.
+Author: @Standinwol
 
-## Features
+## 🌟 Features
 
-- 🎮 Classic 2048 gameplay
-- 🎨 Game achievement NFT minting system with unique designs
-- 💰 NFT marketplace for trading
-- 🌐 **Ethereum Sepolia Testnet** support
-- 🖼️ NFT images stored on IPFS
-- 🎁 Daily token airdrop rewards
-- 📱 Responsive design for mobile devices
-- 🔗 Ethereum-based smart contracts
+### 🔐 Privacy-First Design
 
-## Tech Stack
+- **Encrypted Game State**: All player data (board state, score, tokens, NFTs) are encrypted on-chain
+- **Private Transactions**: Game moves are performed with encrypted inputs
+- **Zero-Knowledge Proofs**: Verifiable gameplay without revealing game state
+- **User-Decrypt Authorization**: Players control their own data decryption
 
-- Frontend:
-  - Next.js
-  - React
-  - TypeScript
-  - CSS Modules
-  - Ethers.js
+### 🎮 Game Mechanics
 
-- Smart Contracts:
-  - Solidity
-  - ERC20 Token
-  - ERC721 NFT
-  - Marketplace Contract
+- **Classic 2048 Gameplay**: Slide tiles to combine numbers and reach 2048
+- **Blockchain Integration**: Every move is recorded on-chain with privacy
+- **NFT Rewards**: Mint unique NFTs based on your game achievements
+- **Token System**: Earn GameTokens through gameplay
+- **Leaderboard**: Publish scores to compete with other players (optional)
+- **Secure Claiming**: Decentralized reward claiming with Key Management Service
 
-## Quick Start
+### 🏗️ Technical Architecture
 
-1. Clone the repository
+- **Smart Contracts**: Game2048FHE_KMS.sol - Optimized for FHE efficiency
+- **Frontend**: React + TypeScript with Next.js and FHE SDK integration
+- **Backend**: Express.js API for user state aggregation and oracle attestations
+- **Relayer**: Zama Relayer for encrypted transaction processing
+- **Network**: Sepolia Testnet (Ethereum)
+
+## 🚀 Quick Start
+
+### Prerequisites
+
+- Node.js 18+
+- MetaMask wallet
+- Sepolia ETH for gas fees
+
+### Installation
+
+1. **Clone the repository**
+
 ```bash
-git clone https://github.com/SuruiLiu/Gamefi-2048.git
-cd Gamefi-2048
+git clone https://github.com/Standinwol/fhevm-2048-game.git
+cd fhevm-2048-game
 ```
 
-2. Install dependencies
+2. **Install dependencies**
+
 ```bash
+# Install all dependencies
 npm install
+
+# Or run setup script
+npm run setup
 ```
 
-3. Start development server
+3. **Configure environment**
+
 ```bash
+# Copy environment template
+cp .env.example .env
+
+# Update with your configuration
+REACT_APP_FHEVM_CONTRACT_ADDRESS=0x...
+REACT_APP_RELAYER_URL=https://relayer.testnet.zama.cloud
+REACT_APP_SEPOLIA_RPC_URL=https://eth-sepolia.g.alchemy.com/v2/your-api-key
+REACT_APP_ETHERSCAN_API_KEY=your-etherscan-api-key
+ORACLE_PRIVATE_KEY=your-deployment-private-key
+```
+
+4. **Deploy contracts (optional - for development)**
+
+```bash
+# Deploy to Sepolia testnet
+npm run deploy:sepolia
+
+# Verify contracts
+npm run verify:sepolia
+```
+
+5. **Start the application**
+
+```bash
+# Start all development servers
 npm run dev
+
+# Or start individually
+npm run dev:frontend  # Frontend on port 3000
+npm run dev:server    # Backend on port 4009
 ```
 
-4. Open http://localhost:3000 in your browser
+6. **Connect your wallet**
 
-## Project Structure
+- Open MetaMask and connect to Sepolia Testnet
+- Connect your wallet to the application
+- Grant user-decrypt authorization when prompted
+
+## 🛠️ Development
+
+### Project Structure
 
 ```
-Gamefi-2048/
-├── components/      # React components
-├── contracts/       # Smart contract files
-├── styles/         # CSS style files
-├── utils/          # Utility functions
-├── pages/          # Next.js pages
-└── public/         # Static assets
+fhevm-2048-game/
+├── contracts/                     # Smart contracts
+│   ├── Game2048FHE_KMS.sol       # Main game contract
+│   ├── Game2048FHE_Strict.sol    # Strict validation version
+│   └── Game2048FHE_ACL_Simple.sol # Access control contract
+├── frontend-fhe-game/             # React frontend
+│   ├── src/
+│   │   ├── components/           # UI components
+│   │   ├── hooks/                # Custom hooks
+│   │   ├── utils/                # Utility functions
+│   │   ├── abi/                  # Contract ABIs
+│   │   ├── pages/                # Next.js pages
+│   │   └── styles/               # CSS modules
+│   └── public/
+│       └── wasm/                 # FHE WASM files
+├── server/                        # Express API server
+│   ├── src/
+│   ├── routes/                   # API routes
+│   ├── middleware/               # Express middleware
+│   └── utils/                    # Server utilities
+├── deploy/                        # Deployment scripts
+├── scripts/                       # Utility scripts
+└── README.md
 ```
 
-## How to Play
+### Development Commands
 
-1. Connect your MetaMask wallet
-2. Use arrow keys or swipe to move tiles
-3. Merge tiles with the same number
-4. Mint NFT when reaching target score
-5. Trade your NFTs in the marketplace
+```bash
+# Setup and installation
+npm run setup              # Initial project setup
+npm install                # Install dependencies
 
-## Contract Addresses
+# Development
+npm run dev                # Start all development servers
+npm run dev:frontend       # Start frontend only
+npm run dev:server         # Start backend only
 
-> Note: All contracts are deployed on **Ethereum Sepolia testnet**. Please make sure you have some Sepolia ETH in your wallet to interact with the contracts.
+# Building
+npm run build              # Build all components
+npm run build:frontend     # Build frontend
+npm run build:server       # Build server
 
-- GameToken: `0x5d768b72b6a41cB84B021A169E0B77a7b6b06f49`
-- GameNFT: `0x37eAD756497bBc8e69a16DC260FaB698309b0067`
-- Marketplace: `0x3045e820CcF4059cE1747F033e8D6246F43850dB`
+# Smart contracts
+npm run compile            # Compile contracts
+npm run deploy:sepolia     # Deploy to Sepolia
+npm run verify:sepolia     # Verify on Etherscan
+npm run test:contracts     # Run contract tests
 
-### NFT Images
-- Legendary: `https://ipfs.io/ipfs/bafybeicc4xossvnz3acndhqw4zcs4xa2xgiyotpvb3ptishm75qtyeszwq`
-- Epic: `https://ipfs.io/ipfs/bafybeifh6ifdof7mee7rqkw355tnxh2qrlu2nudze7dhbbxeqcvpuele7q`
-- Rare: `https://ipfs.io/ipfs/bafybeiaf3fy7r2evvqlhqqpbwla3lsurie2h6cwanalp7fzpxn3cq7pwgy`
-- Common: `https://ipfs.io/ipfs/bafybeighwgusfefm23avzsxpaqbkacrqmywfunx3lx3nywmf23uwxvb45i`
+# Testing
+npm run test:frontend      # Run frontend tests
+npm run lint               # Run linting
+npm run format             # Format code
+```
 
-You can get Sepolia testnet ETH from these faucets:
-- [Sepolia Faucet](https://www.alchemy.com/faucets/ethereum-sepolia)
-- [chainlink Sepolia Faucet](https://faucets.chain.link/sepolia)
+## 🎯 How to Play
 
-## Contributing
+### 1. Get Started
 
-We welcome all forms of contributions, including but not limited to:
+- Connect your MetaMask wallet
+- Start a new game (encrypted on-chain)
+- Use arrow keys or swipe to move tiles
 
-- Bug reports and feature requests
-- Documentation improvements
-- Bug fixes
-- New features
-- Performance optimizations
+### 2. Play the Game
 
-### Contribution Process
+- Combine tiles with the same number to create larger numbers
+- Try to reach the 2048 tile (or go even higher!)
+- Each move is recorded privately on the blockchain
+
+### 3. Claim Rewards
+
+- **GameTokens**: Automatically earned based on score
+- **NFT Rewards**: Mint unique NFTs for high scores
+- **Leaderboard**: Optionally publish your score to compete
+
+## 🔧 Smart Contracts
+
+### Contract Addresses
+
+```bash
+# Update after deployment
+Sepolia: 0x... (Game2048FHE_KMS)
+Sepolia: 0x... (Game2048FHE_Strict)
+Sepolia: 0x... (Game2048FHE_ACL_Simple)
+```
+
+### Key Functions
+
+#### Game Actions
+
+- `startGame()` - Initialize new encrypted game session
+- `makeMove(direction, encryptedProof)` - Submit encrypted move
+- `endGame()` - Finalize game and process rewards
+
+#### FHE Operations
+
+- `getEncryptedBoard(address user)` - Get encrypted board state
+- `getEncryptedScore(address user)` - Get encrypted score
+- `getUserGameTokens(address user)` - Get encrypted token balance
+
+#### KMS Claim System
+
+- `requestClaimTokens(uint256 amount)` - Request token withdrawal
+- `onClaimDecrypted(address user, uint256 amount)` - KMS callback for transfer
+
+## 🤝 Contributing
 
 1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
-### Code Standards
+### Development Guidelines
 
-- Follow [Conventional Commits](https://www.conventionalcommits.org/) specification
-- Write code in TypeScript
-- Maintain consistent formatting (using Prettier)
-- Ensure all tests pass
-- Add necessary comments and documentation
+- Follow TypeScript best practices
+- Add proper error handling for FHE operations
+- Include comprehensive tests
+- Update documentation for new features
+- Ensure privacy-first design principles
 
-## License
+## 📝 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## Contact
+## 🙏 Acknowledgments
 
-If you have any questions or suggestions, feel free to reach out through:
+- **Zama Team** - For the amazing FHEVM technology
+- **Ethereum Foundation** - For the blockchain infrastructure
+- **MetaMask** - For wallet integration
+- **Hardhat** - For development tools
+- **Next.js Team** - For the excellent React framework
 
-- Opening an Issue
-- Submitting a Pull Request
-- Sending an email to [lsruirui@163.com]
+## 📞 Support
 
-## Acknowledgments
+- **Issues**: [GitHub Issues](https://github.com/Standinwol/fhevm-2048-game/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/Standinwol/fhevm-2048-game/discussions)
+- **Author**: [@Standinwol](https://github.com/Standinwol)
 
-- Thanks to all contributors
-- Thanks to [OpenZeppelin](https://openzeppelin.com/) for secure smart contract libraries
-- Inspired by the original 2048 game
+---
+
+⚠️ **Disclaimer**: This is a demo application for educational purposes. Use at your own risk and never use real funds on testnet applications.
