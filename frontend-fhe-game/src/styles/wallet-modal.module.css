@@ -114,6 +114,18 @@
   cursor: not-allowed;
 }
 
+/* EVM Wallet Priority Styling */
+.evmWallet {
+  border-color: #7c3aed;
+  background: linear-gradient(135deg, #faf9ff 0%, #f3f0ff 100%);
+}
+
+.evmWallet:hover:not(:disabled) {
+  border-color: #5b21b6;
+  background: linear-gradient(135deg, #f3f0ff 0%, #ede9fe 100%);
+  box-shadow: 0 6px 20px rgba(124, 58, 237, 0.25);
+}
+
 .walletIcon {
   font-size: 32px;
   margin-right: 16px;
@@ -129,6 +141,20 @@
   font-weight: 600;
   color: #1f2937;
   margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.recommendedBadge {
+  background: linear-gradient(45deg, #22c55e, #16a34a);
+  color: white;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .walletDescription {

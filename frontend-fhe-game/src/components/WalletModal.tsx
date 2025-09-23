@@ -13,34 +13,45 @@ interface WalletOption {
   icon: string;
   id: string;
   description: string;
+  type: 'evm' | 'bridge';
+  priority: number;
 }
 
+// EVM wallets get first priority (1-3), bridge wallets get lower priority (4+)
 const walletOptions: WalletOption[] = [
   {
     name: 'MetaMask',
     icon: '🦊',
     id: 'metamask',
-    description: 'Connect with MetaMask browser extension'
-  },
-  {
-    name: 'WalletConnect',
-    icon: '🔗',
-    id: 'walletconnect',
-    description: 'Connect with WalletConnect protocol'
+    description: 'Most popular EVM wallet - Recommended',
+    type: 'evm' as const,
+    priority: 1
   },
   {
     name: 'Coinbase Wallet',
     icon: '🏦',
     id: 'coinbase',
-    description: 'Connect with Coinbase Wallet'
+    description: 'Easy-to-use EVM wallet from Coinbase',
+    type: 'evm' as const,
+    priority: 2
   },
   {
     name: 'Trust Wallet',
     icon: '🛡️',
     id: 'trust',
-    description: 'Connect with Trust Wallet'
+    description: 'Secure multi-chain EVM wallet',
+    type: 'evm' as const,
+    priority: 3
+  },
+  {
+    name: 'WalletConnect',
+    icon: '🔗',
+    id: 'walletconnect',
+    description: 'Connect via QR code with any wallet',
+    type: 'bridge' as const,
+    priority: 4
   }
-];
+].sort((a, b) => a.priority - b.priority); // Sort by priority to ensure EVM wallets appear first
 
 export default function WalletModal({ isOpen, onClose, onWalletConnect }: WalletModalProps) {
   if (!isOpen) return null;
@@ -143,13 +154,18 @@ export default function WalletModal({ isOpen, onClose, onWalletConnect }: Wallet
             {walletOptions.map((wallet) => (
               <button
                 key={wallet.id}
-                className={styles.walletOption}
+                className={`${styles.walletOption} ${wallet.type === 'evm' ? styles.evmWallet : ''}`}
                 onClick={() => handleWalletClick(wallet.id)}
                 disabled={wallet.id !== 'metamask'} // Only MetaMask is fully implemented
               >
                 <div className={styles.walletIcon}>{wallet.icon}</div>
                 <div className={styles.walletInfo}>
-                  <div className={styles.walletName}>{wallet.name}</div>
+                  <div className={styles.walletName}>
+                    {wallet.name}
+                    {wallet.type === 'evm' && wallet.priority === 1 && (
+                      <span className={styles.recommendedBadge}>Recommended</span>
+                    )}
+                  </div>
                   <div className={styles.walletDescription}>{wallet.description}</div>
                 </div>
                 {wallet.id !== 'metamask' && (

@@ -1,5 +1,5 @@
-require('@nomiclabs/hardhat-ethers');
-require('@nomiclabs/hardhat-etherscan');
+require('@nomicfoundation/hardhat-ethers');
+require('@nomicfoundation/hardhat-verify');
 require('hardhat-gas-reporter');
 require('solidity-coverage');
 require('dotenv').config();
@@ -9,7 +9,7 @@ require('dotenv').config();
  * Configured for Sepolia testnet deployment and local development
  */
 
-const SEPOLIA_RPC_URL = process.env.REACT_APP_SEPOLIA_RPC_URL || 'https://rpc.sepolia.org';
+const SEPOLIA_RPC_URL = process.env.REACT_APP_SEPOLIA_RPC_URL || 'https://eth-sepolia.g.alchemy.com/v2/_oSFSXH0O9XXc6h7hdLQ0mkBEzr9bm4B';
 const PRIVATE_KEY = process.env.ORACLE_PRIVATE_KEY || '0x' + '0'.repeat(64);
 const ETHERSCAN_API_KEY = process.env.REACT_APP_ETHERSCAN_API_KEY || '';
 

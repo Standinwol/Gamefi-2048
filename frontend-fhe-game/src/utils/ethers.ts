@@ -1,8 +1,8 @@
 import { BrowserProvider, Contract } from 'ethers';
-import { CONTRACT_ADDRESSES, NETWORK_CONFIG } from '../contracts-abi/config';
-import { GAME_TOKEN_ABI } from '../contracts-abi/abis/GameToken';
-import { GAME_NFT_ABI } from '../contracts-abi/abis/GameNFT';
-import { MARKETPLACE_ABI } from '../contracts-abi/abis/Marketplace';
+import { CONTRACT_ADDRESSES, NETWORK_CONFIG } from '../config';
+import { GAME_TOKEN_ABI } from '../abi/GameToken';
+import { GAME_NFT_ABI } from '../abi/GameNFT';
+import { MARKETPLACE_ABI } from '../abi/Marketplace';
 
 // Sepolia Network Configuration
 export const SEPOLIA_CHAIN_ID = NETWORK_CONFIG.chainId;
